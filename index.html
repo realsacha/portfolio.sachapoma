@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sacha Poma | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #1004F4;
+            --white: #ffffff;
+            --black: #000000;
+            --off-black: #080808;
+            --light-gray: #f2f2f2;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--off-black); color: var(--white); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; }
+
+        /* --- NAVBAR --- */
+        .nav-bar {
+            position: fixed; top: 0; left: 0; width: 100%; height: 46px;
+            display: flex; background: var(--white); color: var(--black);
+            border: 1px solid var(--black); z-index: 100;
+        }
+        .nav-left {
+            flex-grow: 1; display: flex; align-items: center; padding-left: 20px;
+            font-weight: 800; font-size: 0.9rem; letter-spacing: -0.02em;
+            border-right: 1px solid var(--black);
+        }
+        .nav-right-item {
+            padding: 0 25px; display: flex; align-items: center;
+            border-right: 1px solid var(--black); font-size: 0.75rem;
+            font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; white-space: nowrap;
+        }
+        .nav-right-item:last-child {
+            border-right: none; background: var(--blue); color: var(--white); transition: background 0.3s;
+        }
+        .nav-right-item:last-child:hover { background: var(--black); }
+
+        /* --- HERO --- */
+        .hero { height: 100vh; width: 100%; position: relative; padding-top: 46px; }
+        .hero-video { width: 100%; height: 100%; object-fit: cover; }
+        .corner-text {
+            position: absolute; z-index: 10; font-size: 0.75rem; text-transform: uppercase;
+            letter-spacing: 0.05em; color: #FFFFFF; font-weight: 600;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5); line-height: 1.4;
+        }
+        .top-left { top: 66px; left: 20px; }
+        .top-right { top: 66px; right: 20px; text-align: right; }
+        .bottom-left { bottom: 20px; left: 20px; }
+        .bottom-right { bottom: 20px; right: 20px; text-align: right; }
+
+        /* --- WORKS --- */
+        .section-title {
+            background: var(--white); color: var(--black); padding: 20px;
+            font-size: 0.8rem; text-transform: uppercase; font-weight: 800;
+            border-bottom: 1px solid var(--black); display: flex; justify-content: space-between;
+        }
+        .works-container {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 COLONNES */
+            background: var(--white); gap: 1px; border-bottom: 1px solid var(--black);
+        }
+        .work-item {
+            background: var(--off-black); aspect-ratio: 16/9;
+            position: relative; overflow: hidden; cursor: pointer;
+        }
+        .work-img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: opacity 0.2s ease; filter: grayscale(100%);
+        }
+        .work-hover {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--white); color: var(--black); opacity: 0;
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 30px; transition: opacity 0.2s ease;
+        }
+        .work-item:hover .work-img { opacity: 0; }
+        .work-item:hover .work-hover { opacity: 1; }
+        .w-title { font-size: 3vw; font-weight: 800; text-transform: uppercase; line-height: 0.9; letter-spacing: -0.03em; }
+        .w-cat { font-size: 0.8rem; text-transform: uppercase; text-align: right; font-weight: 600; }
+
+        /* --- ABOUT --- */
+        .about-section {
+            display: grid; grid-template-columns: 1fr 1fr;
+            background: var(--white); color: var(--black); border-bottom: 1px solid var(--black);
+        }
+        .about-photo-wrapper {
+            border-right: 1px solid var(--black); background: var(--light-gray);
+            padding: 60px; display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .photo-frame {
+            width: 80%; max-width: 350px; aspect-ratio: 3/4;
+            border: 2px solid var(--blue); padding: 10px; background: var(--white);
+        }
+        .about-photo {
+            width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%);
+            display: block; border: 1px solid var(--black);
+        }
+        .photo-meta {
+            margin-top: 20px; font-family: 'Roboto Mono', monospace; font-size: 0.7rem;
+            text-transform: uppercase; color: var(--black); opacity: 0.6; width: 80%; max-width: 350px; display: flex; justify-content: space-between;
+        }
+        .about-content { padding: 80px 60px; display: flex; flex-direction: column; justify-content: center; }
+        .about-header { font-size: 3rem; font-weight: 800; text-transform: uppercase; letter-spacing: -0.03em; margin-bottom: 30px; line-height: 0.9; }
+        .about-text { font-size: 1.1rem; line-height: 1.5; max-width: 500px; }
+        .about-text strong { font-weight: 800; color: var(--blue); position: relative; }
+        .about-text strong::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: var(--blue); opacity: 0.3; }
+        .about-tagline { margin-top: 40px; font-size: 0.8rem; text-transform: uppercase; font-weight: 600; border: 1px solid var(--black); padding: 12px 24px; align-self: flex-start; background: var(--white); }
+
+        /* --- FOOTER --- */
+        footer { background: var(--white); color: var(--black); padding: 100px 20px; text-align: center; }
+        .footer-link { font-size: 4rem; font-weight: 800; text-transform: uppercase; letter-spacing: -0.03em; }
+        .footer-link:hover { color: var(--blue); }
+
+        /* MOBILE */
+        @media (max-width: 768px) {
+            .nav-right-item { padding: 0 10px; font-size: 0.6rem; }
+            .works-container { grid-template-columns: 1fr; }
+            .work-item { aspect-ratio: 1/1; }
+            .w-title { font-size: 2.5rem; }
+            .footer-link { font-size: 2rem; }
+            .nav-left { font-size: 0.8rem; }
+            .about-section { grid-template-columns: 1fr; }
+            .about-photo-wrapper { border-right: none; border-bottom: 1px solid var(--black); padding: 40px 20px; }
+            .photo-frame { width: 100%; }
+            .about-content { padding: 40px 20px; }
+            .about-header { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav-bar">
+        <div class="nav-left">SACHA POMA ©</div>
+        <div class="nav-right-item">PORTFOLIO 2026</div>
+        <a href="mailto:hello@sacha.com" class="nav-right-item">CONTACT</a>
+    </nav>
+
+    <header class="hero">
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="https://assets.codepen.io/3364143/7btrrd.mp4" type="video/mp4">
+        </video>
+        <div class="corner-text top-left">Basé en France</div>
+        <div class="corner-text top-right">Disponible en Freelance</div>
+        <div class="corner-text bottom-left">Sacha Poma<br>Motion Designer 2D<br>& Vidéaste</div>
+        <div class="corner-text bottom-right">Showreel.mp4</div>
+    </header>
+
+    <div class="section-title"><span>Projets Sélectionnés</span><span>(04)</span></div>
+
+    <section class="works-container">
+        
+        <div class="work-item">
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200" class="work-img">
+            <div class="work-hover">
+                <div style="border-bottom: 1px solid black; padding-bottom:5px;">01</div>
+                <div class="w-title">Alien<br>Dusk</div>
+                <div class="w-cat">Direction Artistique</div>
+            </div>
+        </div>
+
+        <div class="work-item">
+            <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1200" class="work-img">
+            <div class="work-hover">
+                <div style="border-bottom: 1px solid black; padding-bottom:5px;">02</div>
+                <div class="w-title">I am not<br>a waste</div>
+                <div class="w-cat">Campagne Pub</div>
+            </div>
+        </div>
+
+        <div class="work-item">
+            <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1200" class="work-img">
+            <div class="work-hover">
+                <div style="border-bottom: 1px solid black; padding-bottom:5px;">03</div>
+                <div class="w-title">Deep<br>Fakes</div>
+                <div class="w-cat">Webdocumentaire</div>
+            </div>
+        </div>
+
+        <div class="work-item">
+            <img src="https://images.unsplash.com/photo-1605627087268-c7e6c97517c2?q=80&w=1200" class="work-img">
+            <div class="work-hover">
+                <div style="border-bottom: 1px solid black; padding-bottom:5px;">04</div>
+                <div class="w-title">Parfum<br>3D CGI</div>
+                <div class="w-cat">Projet Blender</div>
+            </div>
+        </div>
+
+    </section>
+
+    <div class="section-title"><span>Profil</span><span>Bio</span></div>
+    
+    <section class="about-section">
+        <div class="about-photo-wrapper">
+            <div class="photo-frame">
+                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000" class="about-photo" alt="Sacha Poma">
+            </div>
+            <div class="photo-meta">
+                <span>ID: SP-26</span>
+                <span>LOC: PARIS, FR</span>
+            </div>
+        </div>
+
+        <div class="about-content">
+            <h3 class="about-header">Parcours<br>Créatif.</h3>
+            <p class="about-text">
+                J'ai débuté mon parcours avec un <strong>Bac STI2D option Cinéma</strong>, animé par l'envie de comprendre l'image technique et artistique. 
+                <br><br>
+                J'ai ensuite intégré un <strong>BUT MMI</strong> pour approfondir mes compétences techniques et me professionnaliser rapidement. C'est durant cette formation que je me suis découvert une véritable passion pour le <strong>Motion Design</strong> et la <strong>Post-Production</strong>.
+            </p>
+            <div class="about-tagline">Disponible</div>
+        </div>
+    </section>
+
+    <footer>
+        <a href="mailto:hello@sacha.com" class="footer-link">Travaillons Ensemble.</a>
+        <div style="margin-top: 30px; font-size: 0.8rem; opacity: 0.5;">PARIS, FRANCE — 2026</div>
+    </footer>
+
+</body>
+</html>
