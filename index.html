@@ -15,20 +15,19 @@
             --light-gray: #f2f2f2;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; /* ON CACHE LE CURSEUR PAR DEFAUT */ }
+        /* RESET ET CURSEUR INVISIBLE */
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
         html { scroll-behavior: smooth; }
         body { background-color: var(--off-black); color: var(--white); font-family: 'Inter', sans-serif; overflow-x: hidden; }
         a { text-decoration: none; color: inherit; }
 
-        /* --- CURSEUR CUSTOM --- */
+        /* --- CURSEUR CUSTOM (CARRÉ & PETIT) --- */
         .cursor {
             position: fixed;
             top: 0; left: 0;
-            /* MODIFICATION ICI : Plus petit (10px) et Carré (pas de border-radius) */
-            width: 10px; 
-            height: 10px;
+            width: 10px; height: 10px; /* Petit */
             background: white;
-            border-radius: 0; /* Zéro pour faire un carré */
+            border-radius: 0; /* Carré */
             pointer-events: none;
             z-index: 99999;
             transform: translate(-50%, -50%);
@@ -36,12 +35,10 @@
             transition: width 0.3s cubic-bezier(0.19, 1, 0.22, 1), height 0.3s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        /* État quand on survole un élément cliquable */
+        /* État au survol (Grossissement) */
         .cursor.hovered {
-            width: 60px;
-            height: 60px;
-            background: white; 
-            /* Le curseur restera carré au survol car il hérite du border-radius: 0 */
+            width: 60px; height: 60px;
+            background: white;
         }
 
         /* --- NAVBAR --- */
@@ -65,7 +62,7 @@
         }
         .nav-right-item:last-child:hover { background: var(--black); }
 
-        /* --- HERO --- */
+        /* --- HERO OPTIMISÉ --- */
         .hero { height: 100vh; width: 100%; position: relative; padding-top: 46px; }
         .hero-video { width: 100%; height: 100%; object-fit: cover; }
         .corner-text {
@@ -78,7 +75,7 @@
         .bottom-left { bottom: 20px; left: 20px; }
         .bottom-right { bottom: 20px; right: 20px; text-align: right; }
 
-        /* --- WORKS --- */
+        /* --- WORKS (Liens vers dossier projets) --- */
         .section-title {
             background: var(--white); color: var(--black); padding: 20px;
             font-size: 0.8rem; text-transform: uppercase; font-weight: 800;
@@ -87,10 +84,12 @@
         .works-container {
             width: 100%;
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 COLONNES */
+            grid-template-columns: repeat(2, 1fr);
             background: var(--white); gap: 1px; border-bottom: 1px solid var(--black);
         }
+        /* On cible le lien <a> qui remplace la div */
         .work-item {
+            display: block; /* Important pour que le lien prenne la place */
             background: var(--off-black); aspect-ratio: 16/9;
             position: relative; overflow: hidden;
         }
@@ -173,9 +172,11 @@
     </nav>
 
     <header class="hero">
-        <video class="hero-video" autoplay muted loop playsinline>
-            <source src="showreel.mp4" type="video/mp4">
+        <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/poster-video.jpg">
+            <source src="assets/showreel.webm" type="video/webm"> 
+            <source src="assets/showreel.mp4" type="video/mp4">
         </video>
+        
         <div class="corner-text top-left">Basé en France</div>
         <div class="corner-text top-right">Disponible en Freelance</div>
         <div class="corner-text bottom-left">Sacha Poma<br>Motion Designer 2D<br>& Vidéaste</div>
@@ -186,41 +187,41 @@
 
     <section class="works-container">
         
-        <div class="work-item">
-            <img src="projet1.jpg" class="work-img">
+        <a href="projets/01-alien-dusk.html" class="work-item">
+            <img src="assets/projet1.jpg" class="work-img" alt="Projet Alien Dusk">
             <div class="work-hover">
                 <div style="border-bottom: 1px solid black; padding-bottom:5px;">01</div>
                 <div class="w-title">Alien<br>Dusk</div>
                 <div class="w-cat">Direction Artistique</div>
             </div>
-        </div>
+        </a>
 
-        <div class="work-item">
-            <img src="projet2.jpg" class="work-img">
+        <a href="projets/02-not-a-waste.html" class="work-item">
+            <img src="assets/projet2.jpg" class="work-img" alt="Projet Not a Waste">
             <div class="work-hover">
                 <div style="border-bottom: 1px solid black; padding-bottom:5px;">02</div>
                 <div class="w-title">I am not<br>a waste</div>
                 <div class="w-cat">Campagne Pub</div>
             </div>
-        </div>
+        </a>
 
-        <div class="work-item">
-            <img src="projet3.jpg" class="work-img">
+        <a href="projets/03-deep-fakes.html" class="work-item">
+            <img src="assets/projet3.jpg" class="work-img" alt="Projet Deep Fakes">
             <div class="work-hover">
                 <div style="border-bottom: 1px solid black; padding-bottom:5px;">03</div>
                 <div class="w-title">Deep<br>Fakes</div>
                 <div class="w-cat">Webdocumentaire</div>
             </div>
-        </div>
+        </a>
 
-        <div class="work-item">
-            <img src="projet4.jpg" class="work-img">
+        <a href="projets/04-parfum-cgi.html" class="work-item">
+            <img src="assets/projet4.jpg" class="work-img" alt="Projet Parfum CGI">
             <div class="work-hover">
                 <div style="border-bottom: 1px solid black; padding-bottom:5px;">04</div>
                 <div class="w-title">Parfum<br>3D CGI</div>
                 <div class="w-cat">Projet Blender</div>
             </div>
-        </div>
+        </a>
 
     </section>
 
@@ -229,7 +230,7 @@
     <section class="about-section">
         <div class="about-photo-wrapper">
             <div class="photo-frame">
-                <img src="moi.jpg" class="about-photo" alt="Sacha Poma">
+                <img src="assets/moi.jpg" class="about-photo" alt="Sacha Poma">
             </div>
             <div class="photo-meta">
                 <span>ID: SP-26</span>
@@ -263,8 +264,7 @@
             cursor.style.top = e.clientY + 'px';
         });
 
-        // Effet de grossissement au survol des liens et éléments cliquables
-        // On cible : les liens (a), les projets (.work-item), et le bouton tagline (.about-tagline)
+        // Effet de grossissement au survol des liens et éléments interactifs
         const hoverElements = document.querySelectorAll('a, .work-item, .about-tagline');
 
         hoverElements.forEach(el => {
