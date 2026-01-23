@@ -24,13 +24,15 @@
         .cursor {
             position: fixed;
             top: 0; left: 0;
-            width: 20px; height: 20px;
+            /* MODIFICATION ICI : Plus petit (10px) et Carré (pas de border-radius) */
+            width: 10px; 
+            height: 10px;
             background: white;
-            border-radius: 50%;
-            pointer-events: none; /* Click au travers */
+            border-radius: 0; /* Zéro pour faire un carré */
+            pointer-events: none;
             z-index: 99999;
             transform: translate(-50%, -50%);
-            mix-blend-mode: difference; /* L'EFFET MAGIQUE : INVERSION DES COULEURS */
+            mix-blend-mode: difference;
             transition: width 0.3s cubic-bezier(0.19, 1, 0.22, 1), height 0.3s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
@@ -38,7 +40,8 @@
         .cursor.hovered {
             width: 60px;
             height: 60px;
-            background: white; /* Reste blanc pour l'effet difference */
+            background: white; 
+            /* Le curseur restera carré au survol car il hérite du border-radius: 0 */
         }
 
         /* --- NAVBAR --- */
