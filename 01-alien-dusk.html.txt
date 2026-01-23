@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alien Dusk | Sacha Poma</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #1004F4;
+            --white: #ffffff;
+            --black: #000000;
+            --off-black: #080808;
+            --light-gray: #f2f2f2;
+        }
+
+        /* RESET & BASE */
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--white); color: var(--black); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; }
+        img, video { display: block; width: 100%; height: auto; }
+
+        /* --- CURSEUR (Carré 10px) --- */
+        .cursor {
+            position: fixed; top: 0; left: 0; width: 10px; height: 10px;
+            background: var(--blue); /* J'ai mis bleu pour qu'on le voit bien sur fond blanc, ou remets white avec mix-blend-mode difference */
+            mix-blend-mode: difference;
+            pointer-events: none; z-index: 99999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s cubic-bezier(0.19, 1, 0.22, 1), height 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .cursor.hovered { width: 60px; height: 60px; background: var(--blue); }
+
+        /* --- NAV SIMPLE --- */
+        .project-nav {
+            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px; z-index: 100; mix-blend-mode: difference; color: white;
+        }
+        .back-btn { font-weight: 800; text-transform: uppercase; letter-spacing: -0.02em; }
+        
+        /* --- HEADER PROJET --- */
+        .project-header {
+            padding: 120px 20px 60px 20px;
+            border-bottom: 1px solid var(--black);
+        }
+        .p-title {
+            font-size: 8vw; line-height: 0.9; font-weight: 800; text-transform: uppercase;
+            letter-spacing: -0.04em; margin-bottom: 40px;
+        }
+        .p-infos {
+            display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px;
+            font-family: 'Roboto Mono', monospace; font-size: 0.8rem; text-transform: uppercase;
+        }
+        .info-col h4 { opacity: 0.5; margin-bottom: 10px; }
+        .info-col p { font-weight: 600; }
+
+        /* --- MEDIA (Images & Vidéos) --- */
+        .project-media {
+            width: 100%;
+        }
+        .full-width-media {
+            width: 100%; height: 80vh; object-fit: cover;
+            border-bottom: 1px solid var(--black);
+        }
+        .grid-media {
+            display: grid; grid-template-columns: 1fr 1fr;
+            border-bottom: 1px solid var(--black);
+        }
+        .grid-media img {
+            border-right: 1px solid var(--black); aspect-ratio: 1/1; object-fit: cover;
+        }
+        .grid-media img:last-child { border-right: none; }
+
+        /* --- DESCRIPTION --- */
+        .project-desc {
+            padding: 80px 20px; display: grid; grid-template-columns: 1fr 1fr;
+            border-bottom: 1px solid var(--black);
+        }
+        .desc-text { font-size: 1.2rem; line-height: 1.5; max-width: 600px; }
+
+        /* --- NEXT PROJECT --- */
+        .next-project {
+            display: block; padding: 100px 20px; text-align: center;
+            background: var(--off-black); color: var(--white);
+            transition: background 0.3s;
+        }
+        .next-project:hover { background: var(--blue); }
+        .np-label { font-family: 'Roboto Mono', monospace; font-size: 0.8rem; margin-bottom: 20px; opacity: 0.7; }
+        .np-title { font-size: 4rem; font-weight: 800; text-transform: uppercase; }
+
+        /* MOBILE */
+        @media (max-width: 768px) {
+            .p-infos { grid-template-columns: 1fr; gap: 30px; }
+            .grid-media { grid-template-columns: 1fr; }
+            .grid-media img { border-right: none; border-bottom: 1px solid var(--black); }
+            .project-desc { grid-template-columns: 1fr; gap: 40px; }
+            .np-title { font-size: 2.5rem; }
+            .cursor { display: none; }
+            * { cursor: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor"></div>
+
+    <nav class="project-nav">
+        <div class="nav-left">SACHA POMA</div>
+        <a href="../index.html" class="back-btn">Fermer [X]</a>
+    </nav>
+
+    <header class="project-header">
+        <h1 class="p-title">Alien Dusk</h1>
+        
+        <div class="p-infos">
+            <div class="info-col">
+                <h4>Description</h4>
+                <p>Direction artistique et motion design pour le lancement de la nouvelle gamme.</p>
+            </div>
+            <div class="info-col">
+                <h4>Client</h4>
+                <p>Studio Alpha</p>
+            </div>
+            <div class="info-col">
+                <h4>Année</h4>
+                <p>2025</p>
+            </div>
+        </div>
+    </header>
+
+    <section class="project-media">
+        <video class="full-width-media" autoplay loop muted playsinline>
+            <source src="../assets/showreel.mp4" type="video/mp4">
+        </video>
+
+        <div class="project-desc">
+            <div class="desc-title">LE CHALLENGE</div>
+            <div class="desc-text">
+                L'objectif était de créer une atmosphère pesante mais élégante. Nous avons utilisé des textures organiques mélangées à des éléments digitaux glitchés pour représenter la dualité du produit.
+                <br><br>
+                J'ai principalement travaillé sur Cinema 4D et After Effects pour le compositing final.
+            </div>
+        </div>
+
+        <div class="grid-media">
+            <img src="../assets/projet1.jpg" alt="Détail 1">
+            <img src="../assets/projet2.jpg" alt="Détail 2">
+        </div>
+
+        <img src="../assets/projet3.jpg" class="full-width-media" style="height: auto; aspect-ratio: 16/9;">
+
+    </section>
+
+    <a href="02-not-a-waste.html" class="next-project">
+        <div class="np-label">PROJET SUIVANT</div>
+        <div class="np-title">I Am Not A Waste</div>
+    </a>
+
+    <script>
+        const cursor = document.querySelector('.cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        const hoverElements = document.querySelectorAll('a, video, img');
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+    </script>
+</body>
+</html>
