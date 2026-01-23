@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Am Not A Waste | Sacha Poma</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #1004F4;
+            --white: #ffffff;
+            --black: #000000;
+            --off-black: #080808;
+            --light-gray: #f2f2f2;
+        }
+
+        /* RESET & BASE */
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--white); color: var(--black); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; }
+        img, video { display: block; width: 100%; height: auto; }
+
+        /* --- CURSEUR --- */
+        .cursor {
+            position: fixed; top: 0; left: 0; width: 10px; height: 10px;
+            background: var(--blue);
+            mix-blend-mode: difference;
+            pointer-events: none; z-index: 99999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s cubic-bezier(0.19, 1, 0.22, 1), height 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .cursor.hovered { width: 60px; height: 60px; background: var(--blue); }
+
+        /* --- NAV SIMPLE --- */
+        .project-nav {
+            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px; z-index: 100; mix-blend-mode: difference; color: white;
+        }
+        .back-btn { font-weight: 800; text-transform: uppercase; letter-spacing: -0.02em; }
+        
+        /* --- HEADER PROJET --- */
+        .project-header {
+            padding: 120px 20px 60px 20px;
+            border-bottom: 1px solid var(--black);
+        }
+        .p-title {
+            font-size: 8vw; line-height: 0.9; font-weight: 800; text-transform: uppercase;
+            letter-spacing: -0.04em; margin-bottom: 40px;
+        }
+        .p-infos {
+            display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px;
+            font-family: 'Roboto Mono', monospace; font-size: 0.8rem; text-transform: uppercase;
+        }
+        .info-col h4 { opacity: 0.5; margin-bottom: 10px; }
+        .info-col p { font-weight: 600; }
+
+        /* --- CUSTOM VIDEO PLAYER WRAPPER --- */
+        .project-media { width: 100%; padding: 60px 0; border-bottom: 1px solid var(--black); }
+        
+        .video-container {
+            position: relative;
+            width: 85%;
+            max-width: 1400px;
+            margin: 0 auto;
+            border: 1px solid var(--black);
+            background: var(--black);
+            overflow: hidden;
+            aspect-ratio: 16/9;
+        }
+
+        .video-element {
+            width: 100%; height: 100%; object-fit: cover;
+            display: block;
+        }
+
+        /* Overlay Play Button */
+        .play-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.2);
+            transition: opacity 0.3s; z-index: 10;
+        }
+        .big-play-btn {
+            width: 80px; height: 80px;
+            background: var(--blue); color: var(--white);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 20px; transition: transform 0.3s ease;
+        }
+        .video-container:hover .big-play-btn { transform: scale(1.1); }
+        .video-container.playing .play-overlay { opacity: 0; pointer-events: none; }
+
+        /* Custom Controls Bar */
+        .custom-controls {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            padding: 15px 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            display: flex; align-items: center; gap: 15px;
+            opacity: 0; transition: opacity 0.3s; z-index: 20;
+        }
+        .video-container:hover .custom-controls,
+        .video-container.paused .custom-controls { opacity: 1; }
+
+        .ctrl-btn {
+            background: none; border: none; color: var(--white);
+            font-family: 'Roboto Mono', monospace; font-size: 0.9rem;
+            text-transform: uppercase; font-weight: 600;
+            padding: 5px; cursor: none;
+        }
+        .ctrl-btn:hover { color: var(--blue); }
+
+        /* Progress Bar */
+        .progress-track {
+            flex-grow: 1; height: 4px; background: rgba(255,255,255,0.3);
+            position: relative; cursor: none;
+        }
+        .progress-fill {
+            height: 100%; width: 0%; background: var(--blue);
+            position: absolute; top: 0; left: 0;
+        }
+
+        /* --- GRID IMAGES --- */
+        .grid-media {
+            display: grid; grid-template-columns: 1fr 1fr;
+            border-top: 1px solid var(--black);
+            border-bottom: 1px solid var(--black);
+        }
+        .grid-media img {
+            border-right: 1px solid var(--black); aspect-ratio: 1/1; object-fit: cover;
+        }
+        .grid-media img:last-child { border-right: none; }
+
+        /* --- DESCRIPTION --- */
+        .project-desc {
+            padding: 80px 20px; display: grid; grid-template-columns: 1fr 1fr;
+            border-bottom: 1px solid var(--black);
+        }
+        .desc-text { font-size: 1.2rem; line-height: 1.5; max-width: 600px; }
+
+        /* --- NEXT PROJECT --- */
+        .next-project {
+            display: block; padding: 100px 20px; text-align: center;
+            background: var(--off-black); color: var(--white);
+            transition: background 0.3s;
+        }
+        .next-project:hover { background: var(--blue); }
+        .np-label { font-family: 'Roboto Mono', monospace; font-size: 0.8rem; margin-bottom: 20px; opacity: 0.7; }
+        .np-title { font-size: 4rem; font-weight: 800; text-transform: uppercase; }
+
+        /* MOBILE */
+        @media (max-width: 768px) {
+            .video-container { width: 100%; border-left: none; border-right: none; }
+            .p-infos { grid-template-columns: 1fr; gap: 30px; }
+            .grid-media { grid-template-columns: 1fr; }
+            .grid-media img { border-right: none; border-bottom: 1px solid var(--black); }
+            .project-desc { grid-template-columns: 1fr; gap: 40px; }
+            .np-title { font-size: 2.5rem; }
+            .cursor { display: none; }
+            * { cursor: auto; }
+            .big-play-btn { width: 60px; height: 60px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor"></div>
+
+    <nav class="project-nav">
+        <div class="nav-left">SACHA POMA</div>
+        <a href="index.html" class="back-btn">Fermer [X]</a>
+    </nav>
+
+    <header class="project-header">
+        <h1 class="p-title">I Am Not<br>A Waste</h1>
+        
+        <div class="p-infos">
+            <div class="info-col">
+                <h4>Description</h4>
+                <p>Campagne de sensibilisation fictive pour la Commission Européenne.</p>
+            </div>
+            <div class="info-col">
+                <h4>Client</h4>
+                <p>Projet Étudiant</p>
+            </div>
+            <div class="info-col">
+                <h4>Année</h4>
+                <p>2024</p>
+            </div>
+        </div>
+    </header>
+
+    <section class="project-media">
+        
+        <div class="video-container paused" id="videoContainer">
+            <video class="video-element" id="mainVideo" playsinline poster="projet2.jpg">
+                <source src="IamNotAWaste.mp4" type="video/mp4">
+            </video>
+
+            <div class="play-overlay" id="playOverlay">
+                <div class="big-play-btn">▶</div>
+            </div>
+
+            <div class="custom-controls">
+                <button class="ctrl-btn" id="playPauseBtn">PLAY</button>
+                <div class="progress-track" id="progressTrack">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <button class="ctrl-btn" id="muteBtn">SON</button>
+                <button class="ctrl-btn" id="fsBtn">[ ]</button>
+            </div>
+        </div>
+
+        <div class="project-desc">
+            <div class="desc-title">LE CONCEPT</div>
+            <div class="desc-text">
+                Ce projet de cours consistait à imaginer une campagne de communication pour la <strong>Commission Européenne</strong> sur la thématique des "déchets moches".
+                <br><br>
+                Nous avons choisi de concentrer notre angle d'attaque sur <strong>l'industrie textile</strong>. La mode est un cycle perpétuel, pourtant des tonnes de textiles sont jetées chaque année alors qu'ils sont encore utilisables.
+                <br><br>
+                Le message est clair : ce ne sont pas des déchets, mais de la matière première. "I am not a waste, I am textile."
+            </div>
+        </div>
+
+        <div class="grid-media">
+            <img src="projet2.jpg" alt="Affiche Campagne 1">
+            <img src="projet2.jpg" alt="Affiche Campagne 2" style="filter: grayscale(100%);"> 
+        </div>
+
+    </section>
+
+    <a href="03-deep-fakes.html" class="next-project">
+        <div class="np-label">PROJET SUIVANT</div>
+        <div class="np-title">Deep Fakes</div>
+    </a>
+
+    <script>
+        // --- CURSOR LOGIC ---
+        const cursor = document.querySelector('.cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        const hoverElements = document.querySelectorAll('a, button, .progress-track, .big-play-btn');
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        // --- VIDEO PLAYER LOGIC ---
+        const container = document.getElementById('videoContainer');
+        const video = document.getElementById('mainVideo');
+        const playOverlay = document.getElementById('playOverlay');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const progressTrack = document.getElementById('progressTrack');
+        const progressFill = document.getElementById('progressFill');
+        const muteBtn = document.getElementById('muteBtn');
+        const fsBtn = document.getElementById('fsBtn');
+
+        function togglePlay() {
+            if (video.paused) {
+                video.play();
+                container.classList.remove('paused');
+                container.classList.add('playing');
+                playPauseBtn.textContent = 'PAUSE';
+            } else {
+                video.pause();
+                container.classList.remove('playing');
+                container.classList.add('paused');
+                playPauseBtn.textContent = 'PLAY';
+            }
+        }
+
+        playOverlay.addEventListener('click', togglePlay);
+        playPauseBtn.addEventListener('click', togglePlay);
+        video.addEventListener('click', togglePlay);
+
+        video.addEventListener('timeupdate', () => {
+            if(video.duration) {
+                const percent = (video.currentTime / video.duration) * 100;
+                progressFill.style.width = percent + '%';
+            }
+        });
+
+        progressTrack.addEventListener('click', (e) => {
+            const rect = progressTrack.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            video.currentTime = pos * video.duration;
+        });
+
+        muteBtn.addEventListener('click', () => {
+            video.muted = !video.muted;
+            muteBtn.textContent = video.muted ? 'MUTE' : 'SON';
+        });
+
+        fsBtn.addEventListener('click', () => {
+            if (video.requestFullscreen) video.requestFullscreen();
+            else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+        });
+
+        video.addEventListener('ended', () => {
+            container.classList.remove('playing');
+            container.classList.add('paused');
+            playPauseBtn.textContent = 'REPLAY';
+            progressFill.style.width = '0%';
+        });
+    </script>
+</body>
+</html>
