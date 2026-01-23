@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Fakes | Sacha Poma</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #1004F4;
+            --white: #ffffff;
+            --black: #000000;
+            --off-black: #080808;
+            --light-gray: #f2f2f2;
+        }
+
+        /* RESET & BASE */
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--white); color: var(--black); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; }
+        img, video { display: block; width: 100%; height: auto; }
+
+        /* --- CURSEUR --- */
+        .cursor {
+            position: fixed; top: 0; left: 0; width: 10px; height: 10px;
+            background: var(--blue);
+            mix-blend-mode: difference;
+            pointer-events: none; z-index: 99999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s cubic-bezier(0.19, 1, 0.22, 1), height 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .cursor.hovered { width: 60px; height: 60px; background: var(--blue); }
+
+        /* --- NAV SIMPLE --- */
+        .project-nav {
+            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px; z-index: 100; mix-blend-mode: difference; color: white;
+        }
+        .back-btn { font-weight: 800; text-transform: uppercase; letter-spacing: -0.02em; }
+        
+        /* --- HEADER PROJET --- */
+        .project-header {
+            padding: 120px 20px 60px 20px;
+            border-bottom: 1px solid var(--black);
+        }
+        .p-title {
+            font-size: 8vw; line-height: 0.9; font-weight: 800; text-transform: uppercase;
+            letter-spacing: -0.04em; margin-bottom: 40px;
+        }
+        .p-infos {
+            display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px;
+            font-family: 'Roboto Mono', monospace; font-size: 0.8rem; text-transform: uppercase;
+        }
+        .info-col h4 { opacity: 0.5; margin-bottom: 10px; }
+        .info-col p { font-weight: 600; }
+
+        /* --- MEDIA SECTION --- */
+        .project-media { width: 100%; padding: 60px 0; border-bottom: 1px solid var(--black); }
+
+        /* --- STYLE COMMUN DES VIDEOS PLAYERS --- */
+        .video-wrapper {
+            position: relative;
+            background: var(--black);
+            overflow: hidden;
+            border: 1px solid var(--black);
+        }
+
+        /* Style "Main" (Grande vidéo) */
+        .video-main {
+            width: 85%; max-width: 1400px; margin: 0 auto 60px auto;
+            aspect-ratio: 16/9;
+        }
+
+        /* Style "Grid" (Petites vidéos) */
+        .video-grid-container {
+            display: grid; grid-template-columns: 1fr 1fr;
+            width: 100%; border-top: 1px solid var(--black);
+        }
+        .video-small {
+            width: 100%; aspect-ratio: 16/9;
+            border-right: 1px solid var(--black);
+            border-bottom: 1px solid var(--black);
+        }
+        .video-small:nth-child(2n) { border-right: none; }
+
+        .video-element { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        /* OVERLAYS & CONTROLS (Identiques aux autres pages) */
+        .play-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.2); transition: opacity 0.3s; z-index: 10;
+        }
+        .big-play-btn {
+            width: 80px; height: 80px; background: var(--blue); color: var(--white);
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            font-size: 20px; transition: transform 0.3s ease;
+        }
+        .video-wrapper:hover .big-play-btn { transform: scale(1.1); }
+        .video-wrapper.playing .play-overlay { opacity: 0; pointer-events: none; }
+
+        .custom-controls {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            padding: 15px 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            display: flex; align-items: center; gap: 15px;
+            opacity: 0; transition: opacity 0.3s; z-index: 20;
+        }
+        .video-wrapper:hover .custom-controls,
+        .video-wrapper.paused .custom-controls { opacity: 1; }
+
+        .ctrl-btn { background: none; border: none; color: var(--white); font-family: 'Roboto Mono', monospace; font-size: 0.9rem; font-weight: 600; cursor: none; }
+        .ctrl-btn:hover { color: var(--blue); }
+
+        .progress-track { flex-grow: 1; height: 4px; background: rgba(255,255,255,0.3); position: relative; cursor: none; }
+        .progress-fill { height: 100%; width: 0%; background: var(--blue); position: absolute; top: 0; left: 0; }
+
+        /* --- DESCRIPTION --- */
+        .project-desc {
+            padding: 80px 20px; display: grid; grid-template-columns: 1fr 1fr;
+            border-top: 1px solid var(--black); border-bottom: 1px solid var(--black);
+        }
+        .desc-text { font-size: 1.2rem; line-height: 1.5; max-width: 600px; }
+
+        /* --- NEXT PROJECT --- */
+        .next-project {
+            display: block; padding: 100px 20px; text-align: center;
+            background: var(--off-black); color: var(--white);
+            transition: background 0.3s;
+        }
+        .next-project:hover { background: var(--blue); }
+        .np-label { font-family: 'Roboto Mono', monospace; font-size: 0.8rem; margin-bottom: 20px; opacity: 0.7; }
+        .np-title { font-size: 4rem; font-weight: 800; text-transform: uppercase; }
+
+        @media (max-width: 768px) {
+            .p-infos, .project-desc, .video-grid-container { grid-template-columns: 1fr; }
+            .video-main { width: 100%; border: none; }
+            .video-small { border-right: none; }
+            .cursor { display: none; }
+            * { cursor: auto; }
+            .big-play-btn { width: 50px; height: 50px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor"></div>
+
+    <nav class="project-nav">
+        <div class="nav-left">SACHA POMA</div>
+        <a href="index.html" class="back-btn">Fermer [X]</a>
+    </nav>
+
+    <header class="project-header">
+        <h1 class="p-title">Deep<br>Fakes</h1>
+        
+        <div class="p-infos">
+            <div class="info-col">
+                <h4>Description</h4>
+                <p>Webdocumentaire sur les dérives de l'IA générative.</p>
+            </div>
+            <div class="info-col">
+                <h4>Contexte</h4>
+                <p>SAE - BUT MMI (2ème année)</p>
+            </div>
+            <div class="info-col">
+                <h4>Année</h4>
+                <p>2025</p>
+            </div>
+        </div>
+    </header>
+
+    <section class="project-media">
+        
+        <div class="video-wrapper video-main paused">
+            <video class="video-element" playsinline poster="projet3.jpg">
+                <source src="deepfake1.mp4" type="video/mp4">
+            </video>
+            <div class="play-overlay"><div class="big-play-btn">▶</div></div>
+            <div class="custom-controls">
+                <button class="ctrl-btn play-btn">PLAY</button>
+                <div class="progress-track"><div class="progress-fill"></div></div>
+                <button class="ctrl-btn mute-btn">SON</button>
+                <button class="ctrl-btn fs-btn">[ ]</button>
+            </div>
+        </div>
+
+        <div class="project-desc">
+            <div class="desc-title">LE PROJET</div>
+            <div class="desc-text">
+                Ce webdocumentaire en 4 épisodes explore les dangers et les dérives de l'intelligence artificielle générative, en se concentrant particulièrement sur le phénomène des Deepfakes.
+                <br><br>
+                Dans le cadre de cette SAE de 2ème année de BUT MMI, j'ai assuré :
+                <ul>
+                    <li>Les <strong>recherches</strong> documentaires.</li>
+                    <li>L'<strong>écriture</strong> des scripts.</li>
+                    <li>Le <strong>Motion Design</strong> et l'habillage graphique.</li>
+                </ul>
+                <br>
+                L'équipe m'a assisté pour le dérushage des différentes interviews d'experts.
+            </div>
+        </div>
+
+        <div class="video-grid-container">
+            
+            <div class="video-wrapper video-small paused">
+                <video class="video-element" playsinline poster="projet3.jpg">
+                    <source src="deepfake2.mp4" type="video/mp4">
+                </video>
+                <div class="play-overlay"><div class="big-play-btn">▶</div></div>
+                <div class="custom-controls">
+                    <button class="ctrl-btn play-btn">PLAY</button>
+                    <div class="progress-track"><div class="progress-fill"></div></div>
+                    <button class="ctrl-btn mute-btn">SON</button>
+                    <button class="ctrl-btn fs-btn">[ ]</button>
+                </div>
+            </div>
+
+            <div class="video-wrapper video-small paused">
+                <video class="video-element" playsinline poster="projet3.jpg">
+                    <source src="deepfake3.mp4" type="video/mp4">
+                </video>
+                <div class="play-overlay"><div class="big-play-btn">▶</div></div>
+                <div class="custom-controls">
+                    <button class="ctrl-btn play-btn">PLAY</button>
+                    <div class="progress-track"><div class="progress-fill"></div></div>
+                    <button class="ctrl-btn mute-btn">SON</button>
+                    <button class="ctrl-btn fs-btn">[ ]</button>
+                </div>
+            </div>
+
+            <div class="video-wrapper video-small paused">
+                <video class="video-element" playsinline poster="projet3.jpg">
+                    <source src="deepfake4.mp4" type="video/mp4">
+                </video>
+                <div class="play-overlay"><div class="big-play-btn">▶</div></div>
+                <div class="custom-controls">
+                    <button class="ctrl-btn play-btn">PLAY</button>
+                    <div class="progress-track"><div class="progress-fill"></div></div>
+                    <button class="ctrl-btn mute-btn">SON</button>
+                    <button class="ctrl-btn fs-btn">[ ]</button>
+                </div>
+            </div>
+            
+            <div style="padding:40px; border-bottom:1px solid black; display:flex; align-items:center; justify-content:center; background:#f2f2f2;">
+                <div style="font-family:'Roboto Mono'; font-size:0.8rem; text-transform:uppercase;">FIN DE LA SÉRIE</div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <a href="04-parfum-cgi.html" class="next-project">
+        <div class="np-label">PROJET SUIVANT</div>
+        <div class="np-title">Parfum 3D CGI</div>
+    </a>
+
+    <script>
+        // --- CURSOR LOGIC ---
+        const cursor = document.querySelector('.cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // Hover général
+        const hoverElements = document.querySelectorAll('a, button, .progress-track, .big-play-btn');
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        // --- MULTIPLE VIDEO PLAYERS LOGIC ---
+        // Cette fonction initialise chaque player indépendamment
+        function initPlayer(wrapper) {
+            const video = wrapper.querySelector('video');
+            const playBtn = wrapper.querySelector('.play-btn');
+            const playOverlay = wrapper.querySelector('.play-overlay');
+            const progressTrack = wrapper.querySelector('.progress-track');
+            const progressFill = wrapper.querySelector('.progress-fill');
+            const muteBtn = wrapper.querySelector('.mute-btn');
+            const fsBtn = wrapper.querySelector('.fs-btn');
+
+            function togglePlay() {
+                // Pause toutes les autres vidéos si on en lance une (optionnel mais propre)
+                document.querySelectorAll('video').forEach(v => {
+                    if (v !== video) {
+                        v.pause();
+                        v.parentElement.classList.remove('playing');
+                        v.parentElement.classList.add('paused');
+                        const btn = v.parentElement.querySelector('.play-btn');
+                        if(btn) btn.textContent = 'PLAY';
+                    }
+                });
+
+                if (video.paused) {
+                    video.play();
+                    wrapper.classList.remove('paused');
+                    wrapper.classList.add('playing');
+                    playBtn.textContent = 'PAUSE';
+                } else {
+                    video.pause();
+                    wrapper.classList.remove('playing');
+                    wrapper.classList.add('paused');
+                    playBtn.textContent = 'PLAY';
+                }
+            }
+
+            playOverlay.addEventListener('click', togglePlay);
+            playBtn.addEventListener('click', togglePlay);
+            video.addEventListener('click', togglePlay);
+
+            video.addEventListener('timeupdate', () => {
+                if(video.duration) {
+                    const percent = (video.currentTime / video.duration) * 100;
+                    progressFill.style.width = percent + '%';
+                }
+            });
+
+            progressTrack.addEventListener('click', (e) => {
+                const rect = progressTrack.getBoundingClientRect();
+                const pos = (e.clientX - rect.left) / rect.width;
+                video.currentTime = pos * video.duration;
+            });
+
+            muteBtn.addEventListener('click', () => {
+                video.muted = !video.muted;
+                muteBtn.textContent = video.muted ? 'MUTE' : 'SON';
+            });
+
+            fsBtn.addEventListener('click', () => {
+                if (video.requestFullscreen) video.requestFullscreen();
+                else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+            });
+
+            video.addEventListener('ended', () => {
+                wrapper.classList.remove('playing');
+                wrapper.classList.add('paused');
+                playBtn.textContent = 'REPLAY';
+                progressFill.style.width = '0%';
+            });
+        }
+
+        // Initialiser tous les players présents sur la page
+        document.querySelectorAll('.video-wrapper').forEach(wrapper => {
+            initPlayer(wrapper);
+        });
+
+    </script>
+</body>
+</html>
