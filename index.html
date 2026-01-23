@@ -15,7 +15,6 @@
             --light-gray: #f2f2f2;
         }
 
-        /* RESET ET CURSEUR INVISIBLE */
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
         html { scroll-behavior: smooth; }
         body { background-color: var(--off-black); color: var(--white); font-family: 'Inter', sans-serif; overflow-x: hidden; }
@@ -35,7 +34,6 @@
             transition: width 0.3s cubic-bezier(0.19, 1, 0.22, 1), height 0.3s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        /* État au survol (Grossissement) */
         .cursor.hovered {
             width: 60px; height: 60px;
             background: white;
@@ -62,7 +60,7 @@
         }
         .nav-right-item:last-child:hover { background: var(--black); }
 
-        /* --- HERO OPTIMISÉ --- */
+        /* --- HERO --- */
         .hero { height: 100vh; width: 100%; position: relative; padding-top: 46px; }
         .hero-video { width: 100%; height: 100%; object-fit: cover; }
         .corner-text {
@@ -75,7 +73,7 @@
         .bottom-left { bottom: 20px; left: 20px; }
         .bottom-right { bottom: 20px; right: 20px; text-align: right; }
 
-        /* --- WORKS (Liens vers dossier projets) --- */
+        /* --- WORKS --- */
         .section-title {
             background: var(--white); color: var(--black); padding: 20px;
             font-size: 0.8rem; text-transform: uppercase; font-weight: 800;
@@ -87,9 +85,9 @@
             grid-template-columns: repeat(2, 1fr);
             background: var(--white); gap: 1px; border-bottom: 1px solid var(--black);
         }
-        /* On cible le lien <a> qui remplace la div */
+        /* Les liens directs vers les fichiers HTML dans le MEME dossier */
         .work-item {
-            display: block; /* Important pour que le lien prenne la place */
+            display: block;
             background: var(--off-black); aspect-ratio: 16/9;
             position: relative; overflow: hidden;
         }
@@ -141,7 +139,6 @@
         .footer-link { font-size: 4rem; font-weight: 800; text-transform: uppercase; letter-spacing: -0.03em; }
         .footer-link:hover { color: var(--blue); }
 
-        /* MOBILE */
         @media (max-width: 768px) {
             .nav-right-item { padding: 0 10px; font-size: 0.6rem; }
             .works-container { grid-template-columns: 1fr; }
@@ -154,8 +151,6 @@
             .photo-frame { width: 100%; }
             .about-content { padding: 40px 20px; }
             .about-header { font-size: 2.5rem; }
-            
-            /* Sur mobile, on remet le curseur normal car pas de hover */
             * { cursor: auto; }
             .cursor { display: none; }
         }
@@ -172,11 +167,10 @@
     </nav>
 
     <header class="hero">
-        <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/poster-video.jpg">
-            <source src="assets/showreel.webm" type="video/webm"> 
-            <source src="assets/showreel.mp4" type="video/mp4">
+        <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="poster-video.jpg">
+            <source src="showreel.webm" type="video/webm">
+            <source src="showreel.mp4" type="video/mp4">
         </video>
-        
         <div class="corner-text top-left">Basé en France</div>
         <div class="corner-text top-right">Disponible en Freelance</div>
         <div class="corner-text bottom-left">Sacha Poma<br>Motion Designer 2D<br>& Vidéaste</div>
@@ -186,9 +180,8 @@
     <div class="section-title"><span>Projets Sélectionnés</span><span>(04)</span></div>
 
     <section class="works-container">
-        
-        <a href="projets/01-alien-dusk.html" class="work-item">
-            <img src="assets/projet1.jpg" class="work-img" alt="Projet Alien Dusk">
+        <a href="01-alien-dusk.html" class="work-item">
+            <img src="projet1.jpg" class="work-img" alt="Alien Dusk">
             <div class="work-hover">
                 <div style="border-bottom: 1px solid black; padding-bottom:5px;">01</div>
                 <div class="w-title">Alien<br>Dusk</div>
@@ -196,8 +189,8 @@
             </div>
         </a>
 
-        <a href="projets/02-not-a-waste.html" class="work-item">
-            <img src="assets/projet2.jpg" class="work-img" alt="Projet Not a Waste">
+        <a href="02-not-a-waste.html" class="work-item">
+            <img src="projet2.jpg" class="work-img" alt="Not a Waste">
             <div class="work-hover">
                 <div style="border-bottom: 1px solid black; padding-bottom:5px;">02</div>
                 <div class="w-title">I am not<br>a waste</div>
@@ -205,8 +198,8 @@
             </div>
         </a>
 
-        <a href="projets/03-deep-fakes.html" class="work-item">
-            <img src="assets/projet3.jpg" class="work-img" alt="Projet Deep Fakes">
+        <a href="03-deep-fakes.html" class="work-item">
+            <img src="projet3.jpg" class="work-img" alt="Deep Fakes">
             <div class="work-hover">
                 <div style="border-bottom: 1px solid black; padding-bottom:5px;">03</div>
                 <div class="w-title">Deep<br>Fakes</div>
@@ -214,15 +207,14 @@
             </div>
         </a>
 
-        <a href="projets/04-parfum-cgi.html" class="work-item">
-            <img src="assets/projet4.jpg" class="work-img" alt="Projet Parfum CGI">
+        <a href="04-parfum-cgi.html" class="work-item">
+            <img src="projet4.jpg" class="work-img" alt="Parfum CGI">
             <div class="work-hover">
                 <div style="border-bottom: 1px solid black; padding-bottom:5px;">04</div>
                 <div class="w-title">Parfum<br>3D CGI</div>
                 <div class="w-cat">Projet Blender</div>
             </div>
         </a>
-
     </section>
 
     <div class="section-title"><span>Profil</span><span>Bio</span></div>
@@ -230,7 +222,7 @@
     <section class="about-section">
         <div class="about-photo-wrapper">
             <div class="photo-frame">
-                <img src="assets/moi.jpg" class="about-photo" alt="Sacha Poma">
+                <img src="moi.jpg" class="about-photo" alt="Sacha Poma">
             </div>
             <div class="photo-meta">
                 <span>ID: SP-26</span>
@@ -255,27 +247,16 @@
     </footer>
 
     <script>
-        // SCRIPT CURSEUR
         const cursor = document.querySelector('.cursor');
-        
-        // Mouvement du curseur
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
         });
-
-        // Effet de grossissement au survol des liens et éléments interactifs
         const hoverElements = document.querySelectorAll('a, .work-item, .about-tagline');
-
         hoverElements.forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursor.classList.add('hovered');
-            });
-            el.addEventListener('mouseleave', () => {
-                cursor.classList.remove('hovered');
-            });
+            el.addEventListener('mouseenter', () => { cursor.classList.add('hovered'); });
+            el.addEventListener('mouseleave', () => { cursor.classList.remove('hovered'); });
         });
     </script>
-
 </body>
 </html>
