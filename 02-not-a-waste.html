@@ -122,17 +122,6 @@
             position: absolute; top: 0; left: 0;
         }
 
-        /* --- GRID IMAGES --- */
-        .grid-media {
-            display: grid; grid-template-columns: 1fr 1fr;
-            border-top: 1px solid var(--black);
-            border-bottom: 1px solid var(--black);
-        }
-        .grid-media img {
-            border-right: 1px solid var(--black); aspect-ratio: 1/1; object-fit: cover;
-        }
-        .grid-media img:last-child { border-right: none; }
-
         /* --- DESCRIPTION --- */
         .project-desc {
             padding: 80px 20px; display: grid; grid-template-columns: 1fr 1fr;
@@ -154,8 +143,6 @@
         @media (max-width: 768px) {
             .video-container { width: 100%; border-left: none; border-right: none; }
             .p-infos { grid-template-columns: 1fr; gap: 30px; }
-            .grid-media { grid-template-columns: 1fr; }
-            .grid-media img { border-right: none; border-bottom: 1px solid var(--black); }
             .project-desc { grid-template-columns: 1fr; gap: 40px; }
             .np-title { font-size: 2.5rem; }
             .cursor { display: none; }
@@ -222,11 +209,6 @@
                 <br><br>
                 Le message est clair : ce ne sont pas des déchets, mais de la matière première. "I am not a waste, I am textile."
             </div>
-        </div>
-
-        <div class="grid-media">
-            <img src="projet2.jpg" alt="Affiche Campagne 1">
-            <img src="projet2.jpg" alt="Affiche Campagne 2" style="filter: grayscale(100%);"> 
         </div>
 
     </section>
